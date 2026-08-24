@@ -3,14 +3,14 @@
 @section('content')
 <div class="max-w-2xl mx-auto mt-8">
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6">Tambah Pengguna Baharu</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Add New User</h2>
         
         <!-- Banner Global Error -->
         @if ($errors->any())
             <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
                 <div class="flex items-center mb-2">
                     <i class="fa-solid fa-circle-exclamation text-red-600 mr-2 text-lg"></i>
-                    <h3 class="text-sm font-bold text-red-800">Terdapat ralat pada borang anda:</h3>
+                    <h3 class="text-sm font-bold text-red-800">There are errors in your form:</h3>
                 </div>
                 <ul class="text-sm text-red-700 list-disc list-inside pl-6">
                     @foreach ($errors->all() as $error)
@@ -25,7 +25,7 @@
             
             <!-- Nama Penuh -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Penuh</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                 <input type="text" name="name" value="{{ old('name') }}" required 
                     class="block w-full rounded-lg shadow-sm p-2.5 border transition-colors 
                     @error('name') border-red-500 focus:border-red-500 focus:ring-red-200 bg-red-50 
@@ -61,7 +61,7 @@
 
             <!-- Kata Laluan -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Kata Laluan</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
                 <input type="password" name="password" required 
                     class="block w-full rounded-lg shadow-sm p-2.5 border transition-colors 
                     @error('password') border-red-500 focus:border-red-500 focus:ring-red-200 bg-red-50 
@@ -73,7 +73,7 @@
 
             <!-- Peranan -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Peranan (Role)</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
                 <select name="role" required 
                     class="block w-full rounded-lg shadow-sm p-2.5 border transition-colors 
                     @error('role') border-red-500 focus:border-red-500 focus:ring-red-200 bg-red-50 
@@ -88,8 +88,8 @@
             </div>
 
             <div class="pt-6 flex justify-end gap-3 border-t border-gray-100">
-                <a href="{{ route('users.index') }}" class="px-5 py-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg font-bold transition-colors">Batal</a>
-                <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-bold shadow-sm transition-colors">Simpan Pengguna</button>
+                <a href="{{ route('users.index') }}" class="px-5 py-2.5 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg font-bold transition-colors">Cancel</a>
+                <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-bold shadow-sm transition-colors">Save User</button>
             </div>
         </form>
     </div>

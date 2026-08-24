@@ -18,6 +18,17 @@
         border-radius: 12px; border-left: 5px solid #10b981; background: #fff; padding: 14px 20px;
         display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
+    /* Select2 custom tweak for consistency */
+    .select2-container .select2-selection--single {
+        height: 42px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 0.5rem !important;
+        display: flex;
+        align-items: center;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 40px !important;
+    }
 </style>
 
 <div class="max-w-7xl mx-auto pb-20">
@@ -73,7 +84,7 @@
     </div>
 </div>
 
-<!-- Template Blok -->
+<!-- Template Block -->
 <template id="defect-template">
     <div class="mb-8 relative" id="block_{INDEX}">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
@@ -98,27 +109,37 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Location / Area <span class="text-red-500">*</span></label>
                         <select id="locationSelect-{INDEX}" class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500" required>
-                            <option value="">-- Search Location --</option>
+                            <option value="">-- Type or Select Location --</option>
                             <option value="Living Room">Living Room</option>
+                            <option value="Dining Area">Dining Area</option>
                             <option value="Kitchen">Kitchen</option>
                             <option value="Master Bedroom">Master Bedroom</option>
+                            <option value="Bedroom 2">Bedroom 2</option>
+                            <option value="Bedroom 3">Bedroom 3</option>
+                            <option value="Bathroom 1">Bathroom 1</option>
+                            <option value="Bathroom 2">Bathroom 2</option>
+                            <option value="Balcony">Balcony</option>
+                            <option value="Yard">Yard</option>
+                            <option value="Car Porch">Car Porch</option>
+                            <option value="Family Area">Family Area</option>
+                            <option value="Staircase">Staircase</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Category <span class="text-red-500">*</span></label>
                         <select id="categorySelect-{INDEX}" class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500" required>
-                            <option value="">-- Select Category --</option>
+                            <option value="">-- Type or Select Category --</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Element Type <span class="text-red-500">*</span></label>
-                        <select id="typeSelect-{INDEX}" class="w-full px-4 py-2 border rounded-lg bg-gray-50" required disabled>
-                            <option value="">-- Select Type --</option>
+                        <select id="typeSelect-{INDEX}" class="w-full px-4 py-2 border rounded-lg bg-white" required>
+                            <option value="">-- Type or Select Type --</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Defect <span class="text-red-500">*</span></label>
-                        <select id="defectSelect-{INDEX}" class="w-full px-4 py-2 border rounded-lg bg-gray-50" required disabled>
+                        <select id="defectSelect-{INDEX}" class="w-full px-4 py-2 border rounded-lg bg-white" required>
                             <option value="">-- Type or Select Defect --</option>
                         </select>
                     </div>
@@ -146,10 +167,84 @@
     const defectData = {
         "WALL": {
             "Wall Tiles": ["Hollow", "Crack Tile", "Lippage", "Uneven", "Missing / Poor Grout", "Stain Mark", "Loose Tile", "Others"],
-            "Painted Wall": ["Paint Peeling", "Uneven Colour", "Brush Mark", "Stain Mark", "Dampness", "Bubbling Paint", "Others"]
+            "Plastered Wall": ["Crack", "Hairline Crack", "Uneven Surface", "Rough Finish", "Debonding", "Dampness", "Others"],
+            "Painted Wall": ["Paint Peeling", "Uneven Colour", "Brush Mark", "Stain Mark", "Dampness", "Bubbling Paint", "Others"],
+            "Skim Coat Wall": ["Hairline Crack", "Uneven Surface", "Poor Finishing", "Peeling", "Dent", "Others"],
+            "Exposed Concrete Wall": ["Honeycomb", "Crack", "Uneven Surface", "Stain", "Poor Finishing", "Others"],
+            "Brick Wall (Unfinished)": ["Misalignment", "Uneven Joint", "Crack", "Missing Mortar", "Others"],
+            "External Wall Finishing": ["Crack", "Paint Peeling", "Dampness", "Stain", "Algae / Mold", "Others"],
+            "Feature Wall": ["Misalignment", "Loose Panel", "Scratch", "Uneven", "Poor Finishing", "Others"]
         },
         "FLOOR": {
-            "Floor Tiles": ["Hollow", "Crack Tile", "Lippage", "Uneven Level", "Missing Grout", "Stain", "Others"]
+            "Floor Tiles": ["Hollow", "Crack Tile", "Lippage", "Uneven Level", "Missing Grout", "Stain", "Others"],
+            "Timber Flooring": ["Scratch", "Gap", "Warping", "Uneven", "Loose", "Others"],
+            "Vinyl Flooring": ["Bubble", "Peeling", "Uneven", "Gap", "Scratch", "Others"],
+            "Marble / Granite": ["Crack", "Stain", "Uneven", "Lippage", "Scratch", "Others"],
+            "Cement Screed": ["Crack", "Uneven", "Dusting Surface", "Poor Finishing", "Others"],
+            "Concrete Floor": ["Crack", "Uneven", "Surface Damage", "Stain", "Others"],
+            "External Pavement": ["Crack", "Uneven", "Settlement", "Ponding Water", "Others"],
+            "Car Porch Floor": ["Crack", "Uneven", "Oil Stain", "Ponding Water", "Others"]
+        },
+        "WINDOW": {
+            "Glass Panel": ["Crack", "Scratch", "Stain", "Broken", "Others"],
+            "Window Frame": ["Misalignment", "Gap", "Dent", "Rust", "Loose", "Others"],
+            "Sliding Window": ["Not Smooth", "Stuck", "Misalignment", "Loose Roller", "Others"],
+            "Casement Window": ["Cannot Close Properly", "Misalignment", "Loose Hinge", "Gap", "Others"],
+            "Fixed Window": ["Gap", "Improper Installation", "Sealant Issue", "Others"],
+            "Window Sealant": ["Crack", "Gap", "Poor Finishing", "Leakage", "Others"]
+        },
+        "DOOR": {
+            "Door Leaf": ["Scratch", "Dent", "Warping", "Misalignment", "Others"],
+            "Door Frame": ["Misalignment", "Gap", "Crack", "Loose", "Others"],
+            "Sliding Door": ["Not Smooth", "Stuck", "Misalignment", "Roller Issue", "Others"],
+            "Glass Door": ["Crack", "Scratch", "Misalignment", "Others"],
+            "Door Lock / Handle": ["Not Functioning", "Loose", "Hard to Operate", "Others"],
+            "Door Hinge": ["Loose", "Rust", "Noise", "Others"],
+            "Door Stopper": ["Loose", "Missing", "Not Functioning", "Others"]
+        },
+        "CEILING": {
+            "Plaster Ceiling": ["Crack", "Uneven", "Water Stain", "Sagging", "Others"],
+            "Gypsum Ceiling": ["Crack", "Joint Visible", "Sagging", "Water Damage", "Others"],
+            "Skim Coat Ceiling": ["Hairline Crack", "Uneven", "Peeling", "Others"],
+            "Concrete Slab": ["Crack", "Honeycomb", "Uneven", "Others"],
+            "Ceiling Joint": ["Visible Joint", "Crack", "Poor Finishing", "Others"],
+            "Cornice": ["Crack", "Gap", "Misalignment", "Others"]
+        },
+        "ELECTRICAL": {
+            "Power Socket": ["Not Functioning", "Loose", "Burn Mark", "Improper Installation", "Others"],
+            "Switch": ["Not Functioning", "Loose", "Hard to Press", "Others"],
+            "Lighting Point": ["Not Functioning", "Flickering", "Loose", "Others"],
+            "Distribution Board (DB)": ["Improper Labelling", "Loose Wiring", "Safety Issue", "Others"],
+            "MCB / RCCB": ["Tripping Issue", "Not Functioning", "Others"],
+            "Wiring": ["Exposed Wire", "Loose", "Improper Routing", "Others"],
+            "Earthing": ["Not Properly Connected", "Safety Issue", "Others"]
+        },
+        "PLUMBING": {
+            "Water Tap": ["Leakage", "Loose", "Low Pressure", "Others"],
+            "Basin": ["Crack", "Leakage", "Stain", "Others"],
+            "Sink": ["Leakage", "Blockage", "Scratch", "Others"],
+            "WC (Toilet Bowl)": ["Leakage", "Not Flushing Properly", "Loose", "Others"],
+            "Shower": ["Leakage", "Low Pressure", "Not Functioning", "Others"],
+            "Floor Trap": ["Blockage", "Slow Drainage", "Odor", "Others"],
+            "Pipe": ["Leakage", "Crack", "Rust", "Others"],
+            "Water Heater": ["Not Functioning", "Leakage", "Low Temperature", "Others"],
+            "Water Tank": ["Leakage", "Dirty / Contamination", "Float Valve Issue", "Low Pressure", "Noise", "Others"]
+        },
+        "ROOF": {
+            "Roof Tile": ["Crack", "Broken", "Displacement", "Others"],
+            "Metal Roof": ["Rust", "Leakage", "Loose", "Others"],
+            "Roof Structure": ["Misalignment", "Damage", "Others"],
+            "Gutter": ["Blockage", "Leakage", "Rust", "Others"],
+            "Downpipe": ["Blockage", "Leakage", "Disconnected", "Others"],
+            "Flashing": ["Loose", "Leakage", "Improper Installation", "Others"]
+        },
+        "EXTERNAL WORKS": {
+            "Drain": ["Blockage", "Crack", "Poor Flow", "Others"],
+            "Road / Driveway": ["Crack", "Uneven", "Settlement", "Others"],
+            "Turfing / Grass": ["Patchy", "Uneven", "Poor Growth", "Others"],
+            "Fence": ["Rust", "Loose", "Misalignment", "Others"],
+            "Gate": ["Not Smooth", "Misalignment", "Rust", "Others"],
+            "External Finishing": ["Crack", "Peeling", "Stain", "Others"]
         }
     };
 
@@ -171,7 +266,7 @@
         $('#btnAddMore').click(async function() {
             if (savedCount >= MAX_DEFECTS) { alert('Maximum 20 defects only.'); return; }
             let lastIndex = defectCount - 1;
-            if (!validateBlock(lastIndex)) { alert('Sila lengkapkan semua butiran dan letak pin pada layout.'); return; }
+            if (!validateBlock(lastIndex)) { alert('Please complete all required fields and pin the location on the layout plan.'); return; }
 
             const btn = $(this);
             btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Saving...');
@@ -181,7 +276,7 @@
                 collapseBlock(lastIndex);
                 savedCount++;
                 addNewDefectBlock();
-            } catch (err) { alert('Gagal simpan: ' + err); }
+            } catch (err) { alert('Failed to save: ' + err); }
 
             btn.prop('disabled', false).html('<i class="fas fa-plus-circle mr-2"></i> SAVE & ADD ANOTHER');
         });
@@ -189,7 +284,7 @@
         $('#defectForm').on('submit', async function(e) {
             e.preventDefault();
             let lastIndex = defectCount - 1;
-            if (!validateBlock(lastIndex)) { alert('Sila lengkapkan semua butiran.'); return; }
+            if (!validateBlock(lastIndex)) { alert('Please complete all required fields.'); return; }
 
             const btn = $('#btnSaveAll');
             btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> SAVING...');
@@ -198,7 +293,7 @@
                 await ajaxSaveBlock(lastIndex);
                 window.location.href = "{{ route('inspection.show', $inspection->id) }}";
             } catch (err) {
-                alert('Gagal simpan: ' + err);
+                alert('Failed to save: ' + err);
                 btn.prop('disabled', false).html('<i class="fas fa-save mr-2"></i> FINISH & VIEW ALL');
             }
         });
@@ -247,7 +342,7 @@
             <div class="defect-saved-summary">
                 <div class="flex items-center">
                     <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-bold mr-3">Item #${dispNum}</span>
-                    <span class="text-gray-700"><strong>${location}</strong> — <em>${defect}</em> <span class="text-gray-400 text-sm ml-2">(${imgCount} gambar)</span></span>
+                    <span class="text-gray-700"><strong>${location}</strong> — <em>${defect}</em> <span class="text-gray-400 text-sm ml-2">(${imgCount} image(s))</span></span>
                 </div>
                 <i class="fas fa-check text-emerald-500 text-xl"></i>
             </div>`;
@@ -280,43 +375,47 @@
     function initBlockLogic(idx) {
         blockDataArrays[idx] = new DataTransfer();
 
-        $(`#locationSelect-${idx}, #defectSelect-${idx}`).select2({ width: '100%', tags: true });
+        // Enable Select2 with tags enabled for custom entry on all fields
+        $(`#locationSelect-${idx}`).select2({ width: '100%', tags: true, placeholder: '-- Type or Select Location --' });
+        $(`#categorySelect-${idx}`).select2({ width: '100%', tags: true, placeholder: '-- Type or Select Category --' });
+        $(`#typeSelect-${idx}`).select2({ width: '100%', tags: true, placeholder: '-- Type or Select Type --' });
+        $(`#defectSelect-${idx}`).select2({ width: '100%', tags: true, placeholder: '-- Type or Select Defect --' });
 
-        const catSelect = document.getElementById(`categorySelect-${idx}`);
+        const catSelect = $(`#categorySelect-${idx}`);
         for (let cat in defectData) {
-            let opt = document.createElement('option');
-            opt.value = cat; opt.innerHTML = cat; catSelect.appendChild(opt);
+            catSelect.append(new Option(cat, cat, false, false));
         }
+        catSelect.trigger('change');
 
-        $(`#categorySelect-${idx}`).on('change', function() {
-            const typeSelect = document.getElementById(`typeSelect-${idx}`);
+        catSelect.on('change', function() {
+            const selectedCat = $(this).val();
+            const typeSelect = $(`#typeSelect-${idx}`);
             const defectSelect = $(`#defectSelect-${idx}`);
-            typeSelect.innerHTML = '<option value="">-- Select Type --</option>';
-            defectSelect.val(null).trigger('change').prop('disabled', true);
-            typeSelect.disabled = true;
+            
+            typeSelect.empty().append('<option value="">-- Type or Select Type --</option>');
+            defectSelect.empty().append('<option value="">-- Type or Select Defect --</option>').trigger('change');
 
-            if (this.value && defectData[this.value]) {
-                typeSelect.disabled = false;
-                for (let type in defectData[this.value]) {
-                    let opt = document.createElement('option');
-                    opt.value = type; opt.innerHTML = type; typeSelect.appendChild(opt);
+            if (selectedCat && defectData[selectedCat]) {
+                for (let type in defectData[selectedCat]) {
+                    typeSelect.append(new Option(type, type, false, false));
                 }
+                typeSelect.trigger('change');
             }
         });
 
         $(`#typeSelect-${idx}`).on('change', function() {
+            const selectedType = $(this).val();
+            const selectedCat = $(`#categorySelect-${idx}`).val();
             const defectSelect = $(`#defectSelect-${idx}`);
+            
             defectSelect.empty().append('<option value="">-- Type or Select Defect --</option>');
-            if (this.value) {
-                defectSelect.prop('disabled', false);
-                const selectedCat = document.getElementById(`categorySelect-${idx}`).value;
-                if (defectData[selectedCat] && defectData[selectedCat][this.value]) {
-                    defectData[selectedCat][this.value].forEach(def => {
-                        defectSelect.append(new Option(def, def, false, false));
-                    });
-                }
-                defectSelect.trigger('change');
-            } else { defectSelect.prop('disabled', true).trigger('change'); }
+            
+            if (selectedCat && selectedType && defectData[selectedCat] && defectData[selectedCat][selectedType]) {
+                defectData[selectedCat][selectedType].forEach(def => {
+                    defectSelect.append(new Option(def, def, false, false));
+                });
+            }
+            defectSelect.trigger('change');
         });
 
         document.getElementById(`layout-img-${idx}`).addEventListener('click', function(e) {
@@ -336,7 +435,7 @@
             if (!files || files.length === 0) return;
             let dt = blockDataArrays[idx];
             if (dt.items.length + files.length > 3) {
-                alert(`Max 3 gambar sahaja.`); this.value = ''; return;
+                alert(`Maximum 3 images allowed.`); this.value = ''; return;
             }
             document.getElementById(`upload-status-${idx}`).classList.remove('hidden');
             uiInput.disabled = true;
@@ -415,7 +514,7 @@
         blockDataArrays[blockIdx] = newDt; updateBlockPreview(blockIdx);
     }
 
-    /* === LOGIK CANVAS (SAMA MCM ASAL) === */
+    /* === CANVAS EDITOR LOGIC === */
     let currentTool = 'circle'; const drawCanvas = document.getElementById('drawCanvas'); const ctx = drawCanvas.getContext('2d');
     let baseImageObj = new Image(); let drawObjects = []; let currentPath = null;
     let isDrawing = false, isDragging = false, selectedObj = null, dragOffset = {x: 0, y: 0};

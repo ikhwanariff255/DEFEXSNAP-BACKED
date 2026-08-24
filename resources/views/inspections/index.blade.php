@@ -3,7 +3,7 @@
 @section('content')
 
 <style>
-    /* CSS Override untuk tukar warna Pagination ke tema Biru (Blue) */
+    /* CSS Override to change Pagination color to Blue theme */
     nav[role="navigation"] a, 
     nav[role="navigation"] span[aria-disabled="true"] {
         background-color: #ffffff !important;
@@ -29,11 +29,11 @@
     
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">Senarai Projek Pemeriksaan</h2>
-            <p class="text-gray-500 text-sm mt-1">Semua rekod pemeriksaan hartanah klien yang telah didaftarkan.</p>
+            <h2 class="text-2xl font-bold text-gray-800">Inspection Project List</h2>
+            <p class="text-gray-500 text-sm mt-1">All registered client property inspection records.</p>
         </div>
         <a href="{{ route('inspection.create') }}" class="px-4 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 shadow-sm transition-colors flex items-center">
-            <i class="fa-solid fa-plus mr-2"></i> Daftar Projek Baru
+            <i class="fa-solid fa-plus mr-2"></i> Register New Project
         </a>
     </div>
 
@@ -53,25 +53,25 @@
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
                     </div>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama projek, nama klien atau alamat..." 
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search project name, client name or address..." 
                            class="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors shadow-sm">
                 </div>
 
                 <div class="sm:w-48">
                     <select name="type" onchange="this.form.submit()" 
                             class="block w-full py-2.5 px-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors shadow-sm cursor-pointer">
-                        <option value="">Semua Jenis</option>
-                        <option value="Banglo" {{ request('type') == 'Banglo' ? 'selected' : '' }}>Banglo</option>
+                        <option value="">All Types</option>
+                        <option value="Banglo" {{ request('type') == 'Banglo' ? 'selected' : '' }}>Bungalow</option>
                         <option value="Semi-D" {{ request('type') == 'Semi-D' ? 'selected' : '' }}>Semi-D</option>
-                        <option value="Teres" {{ request('type') == 'Teres' ? 'selected' : '' }}>Teres</option>
-                        <option value="Kondominium" {{ request('type') == 'Kondominium' ? 'selected' : '' }}>Kondominium</option>
-                        <option value="Komersial" {{ request('type') == 'Komersial' ? 'selected' : '' }}>Komersial</option>
+                        <option value="Teres" {{ request('type') == 'Teres' ? 'selected' : '' }}>Terrace</option>
+                        <option value="Kondominium" {{ request('type') == 'Kondominium' ? 'selected' : '' }}>Condominium</option>
+                        <option value="Komersial" {{ request('type') == 'Komersial' ? 'selected' : '' }}>Commercial</option>
                     </select>
                 </div>
 
                 <div class="flex gap-2">
                     <button type="submit" class="px-5 py-2.5 bg-slate-800 text-white text-sm font-semibold rounded-xl hover:bg-slate-900 transition-colors shadow-sm">
-                        Cari
+                        Search
                     </button>
                     
                     @if(request('search') || request('type'))
@@ -87,11 +87,11 @@
                 <thead>
                     <tr class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-100">
                         <th class="py-4 px-6 font-semibold">No.</th>
-                        <th class="py-4 px-6 font-semibold">Gambar</th>
-                        <th class="py-4 px-6 font-semibold">Tajuk & Jenis</th>
-                        <th class="py-4 px-6 font-semibold">Klien & Alamat</th>
-                        <th class="py-4 px-6 font-semibold">Negeri</th>
-                        <th class="py-4 px-6 font-semibold text-center">Tindakan</th>
+                        <th class="py-4 px-6 font-semibold">Image</th>
+                        <th class="py-4 px-6 font-semibold">Title & Type</th>
+                        <th class="py-4 px-6 font-semibold">Client & Address</th>
+                        <th class="py-4 px-6 font-semibold">State</th>
+                        <th class="py-4 px-6 font-semibold text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
@@ -103,7 +103,7 @@
                                 @if($item->img)
                                     <img src="{{ asset('storage/' . $item->img) }}" alt="Rumah" class="w-16 h-12 object-cover rounded-lg shadow-sm border">
                                 @else
-                                    <span class="text-xs text-gray-400 italic">Tiada gambar</span>
+                                    <span class="text-xs text-gray-400 italic">No image</span>
                                 @endif
                             </td>
 
@@ -125,10 +125,10 @@
 
                             <td class="py-4 px-6 text-center">
                                 <div class="flex items-center justify-center space-x-2">
-                                    <a href="{{ route('inspection.show', $item->id) }}" class="px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-semibold transition-colors" title="Lihat Butiran">
+                                    <a href="{{ route('inspection.show', $item->id) }}" class="px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-semibold transition-colors" title="View Details">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('inspection.edit', $item->id) }}" class="px-3 py-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 rounded-lg text-xs font-semibold transition-colors" title="Edit Projek">
+                                    <a href="{{ route('inspection.edit', $item->id) }}" class="px-3 py-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 rounded-lg text-xs font-semibold transition-colors" title="Edit Project">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                 </div>
@@ -138,9 +138,9 @@
                         <tr>
                             <td colspan="6" class="py-12 text-center text-gray-400">
                                 <i class="fa-solid fa-magnifying-glass text-4xl mb-3 text-gray-300 block"></i>
-                                <span class="text-base font-medium text-gray-500">Tiada rekod projek pemeriksaan ditemui.</span>
+                                <span class="text-base font-medium text-gray-500">No inspection project records found.</span>
                                 @if(request('search') || request('type'))
-                                    <p class="text-sm mt-1">Sila cuba kata kunci carian yang lain.</p>
+                                    <p class="text-sm mt-1">Please try a different search keyword.</p>
                                 @endif
                             </td>
                         </tr>

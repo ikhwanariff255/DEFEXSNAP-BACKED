@@ -40,30 +40,30 @@
                 <!-- Link Dashboard -->
                 <a href="{{ route('dashboard') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('dashboard') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} transition-colors">
                     <i class="fa-solid fa-chart-pie w-6"></i>
-                    <span>Dashboard Utama</span>
+                    <span>Dashboard </span>
                 </a>
 
                 <!-- Link Senarai Pemeriksaan -->
                 <a href="{{ route('inspection.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('inspection.index') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} transition-colors">
                     <i class="fa-solid fa-list-check w-6"></i>
-                    <span>Senarai Projek</span>
+                    <span>All Inspections</span>
                 </a>
 
                 <!-- Link Daftar Projek Baru -->
                 <a href="{{ route('inspection.create') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('inspection.create') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} transition-colors">
                     <i class="fa-solid fa-plus-circle w-6"></i>
-                    <span>Daftar Pemeriksaan</span>
+                    <span>Add Inspections</span>
                 </a>
 
                 <!-- ================= TAMBAHAN MENU PENGGUNA ================= -->
                 @if(Auth::user()->role == 'admin' || Auth::user()->role == 'owner')
                 <div class="pt-4 mt-4 border-t border-slate-800">
-                    <p class="px-4 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Pentadbiran</p>
+                    <p class="px-4 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Management</p>
                     
                     <!-- Link Pengurusan Pengguna -->
                     <a href="{{ route('users.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('users.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} transition-colors">
                         <i class="fa-solid fa-users-gear w-6"></i>
-                        <span>Pengurusan Pengguna</span>
+                        <span>User Management</span>
                     </a>
                 </div>
                 @endif
