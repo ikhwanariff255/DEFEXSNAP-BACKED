@@ -55,6 +55,33 @@
                     <span>Add Inspections</span>
                 </a>
 
+                <!-- ================= TAMBAHAN MENU KEUANGAN / INVOICE ================= -->
+                @if(Auth::user()->role == 'admin' || Auth::user()->role == 'owner')
+                <div class="pt-4 mt-4 border-t border-slate-800">
+                    <p class="px-4 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Financials</p>
+                    
+                    <!-- Link Invoices -->
+                    <a href="{{ route('invoice.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('invoice.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} transition-colors">
+                        <i class="fa-solid fa-file-invoice-dollar w-6"></i>
+                        <span>Invoices</span>
+                    </a>
+
+                    <!-- Link Cash Flow -->
+                    <a href="{{ route('cashflow.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('cashflow.*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} transition-colors">
+                        <i class="fa-solid fa-wallet w-6"></i>
+                        <span>Cash Flow</span>
+                    </a>
+
+                    <!-- Tambah Link Report Gaji Di Sini -->
+                    <a href="{{ route('reports.part_time') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-lg {{ request()->routeIs('reports.part_time') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} transition-colors">
+                        <i class="fa-solid fa-chart-pie w-6"></i>
+                        <span>Part-Time Report</span>
+                    </a>
+                    
+                </div>
+                @endif
+                <!-- ================================================================= -->
+
                 <!-- ================= TAMBAHAN MENU PENGGUNA ================= -->
                 @if(Auth::user()->role == 'admin' || Auth::user()->role == 'owner')
                 <div class="pt-4 mt-4 border-t border-slate-800">
@@ -96,7 +123,7 @@
                         <i class="fa-solid fa-bars text-xl"></i>
                     </button>
                     
-                    <!-- Boleh letak tajuk page kat sini kalau nak, atau biarkan kosong -->
+                    <!-- Tajuk page -->
                     @if (isset($header))
                         <h2 class="text-xl font-semibold leading-tight text-gray-800 hidden sm:block">
                             {{ $header }}

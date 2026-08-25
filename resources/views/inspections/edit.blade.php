@@ -8,6 +8,16 @@
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+        @if ($errors->any())
+            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
+                <ul class="list-disc ml-5 text-sm">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="{{ route('inspection.update', $inspection->id) }}" method="POST" enctype="multipart/form-data">
             @csrf 
             @method('PUT')
@@ -29,12 +39,30 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
                     <select name="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none bg-white" required>
-                        <option value="Teres Setingkat" {{ $inspection->type == 'Teres Setingkat' ? 'selected' : '' }}>1-Storey Terrace</option>
-                        <option value="Teres 2 Tingkat" {{ $inspection->type == 'Teres 2 Tingkat' ? 'selected' : '' }}>2-Storey Terrace</option>
-                        <option value="Semi-D" {{ $inspection->type == 'Semi-D' ? 'selected' : '' }}>Semi-D</option>
-                        <option value="Banglo" {{ $inspection->type == 'Banglo' ? 'selected' : '' }}>Bungalow</option>
-                        <option value="Kondominium / Apartment" {{ $inspection->type == 'Kondominium / Apartment' ? 'selected' : '' }}>Condominium / Apartment</option>
+                        <option value="1-Storey Terrace" {{ old('type', $inspection->type) == '1-Storey Terrace' || $inspection->type == 'Teres Setingkat' ? 'selected' : '' }}>1-Storey Terrace</option>
+                        <option value="2-Storey Terrace" {{ old('type', $inspection->type) == '2-Storey Terrace' || $inspection->type == 'Teres 2 Tingkat' ? 'selected' : '' }}>2-Storey Terrace</option>
+                        <option value="Semi-D" {{ old('type', $inspection->type) == 'Semi-D' ? 'selected' : '' }}>Semi-D</option>
+                        <option value="Bungalow" {{ old('type', $inspection->type) == 'Bungalow' || $inspection->type == 'Banglo' ? 'selected' : '' }}>Bungalow</option>
+                        <option value="Condominium / Apartment" {{ old('type', $inspection->type) == 'Condominium / Apartment' || $inspection->type == 'Kondominium / Apartment' ? 'selected' : '' }}>Condominium / Apartment</option>
                     </select>
+                </div>
+
+                <!-- Assigned Staff (Multiple Selection) -->
+                <div class="col-span-1 md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Assigned Staff In Charge (Select one or more)</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 border border-gray-300 rounded-lg bg-gray-50 max-h-48 overflow-y-auto">
+                        @php
+                            $assignedStaffIds = old('user_id', $inspection->staffs->pluck('id')->toArray());
+                        @endphp
+                        @foreach($staffs as $staff)
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" name="user_id[]" value="{{ $staff->id }}" 
+                                    {{ in_array($staff->id, $assignedStaffIds) ? 'checked' : '' }}
+                                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700 font-medium">{{ $staff->name }}</span>
+                            </label>
+                        @endforeach
+                    </div>
                 </div>
 
                 <!-- Address -->
@@ -213,6 +241,7 @@
                 }
             });
         }
+
         if(cropButton) {
             cropButton.addEventListener('click', function () {
                 if (cropper) {
@@ -249,6 +278,7 @@
                 }
             });
         }
+
         if(cropLayoutButton) {
             cropLayoutButton.addEventListener('click', function () {
                 if (layoutCropper) {

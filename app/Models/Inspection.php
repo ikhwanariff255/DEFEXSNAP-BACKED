@@ -27,4 +27,9 @@ class Inspection extends Model
     {
         return $this->hasMany(Defect::class);
     }
+
+    public function staffs()
+    {
+        return $this->belongsToMany(User::class, 'inspection_user', 'inspection_id', 'user_id');
+    }
 }

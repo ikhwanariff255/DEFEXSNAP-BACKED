@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CompanySetting;
 use App\Models\Inspection;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,41 +14,44 @@ use Illuminate\Support\Str;
 class InspectionController extends Controller
 {
     // Paparkan borang pendaftaran inspection
+
+    public function staffs()
+    {
+        return $this->belongsToMany(User::class, 'inspection_user', 'inspection_id', 'user_id');
+    }
     public function create()
     {
-        return view('inspections.create');
+        $staffs = User::all();
+        return view('inspections.create', compact('staffs'));
     }
 
     // Simpan data dari borang ke dalam database
+    // Simpan data dari borang ke dalam database
     public function store(Request $request)
     {
-        // 1. Validasi input borang
         $request->validate([
             'title' => 'required|string|max:255',
             'clientname' => 'required|string|max:255',
+            'user_id' => 'required|array', // Pastikan ia array
+            'user_id.*' => 'exists:users,id',
             'address' => 'required|string',
             'state' => 'required|string',
             'type' => 'required|string',
-            'cropped_image' => 'nullable|string',  
-            'cropped_layout' => 'nullable|string', 
+            'cropped_image' => 'nullable|string',
+            'cropped_layout' => 'nullable|string',
         ]);
 
         Storage::disk('public')->makeDirectory('inspections');
-        
+
         $imgPath = null;
         $layoutPath = null;
 
-        // 2. Proses Gambar Rumah (Base64)
         if ($request->filled('cropped_image')) {
             $base64Image = $request->cropped_image;
-            
-            // Bersihkan format base64 header jika ada
             if (str_contains($base64Image, 'data:image')) {
                 $base64Image = substr($base64Image, strpos($base64Image, ',') + 1);
             }
-            
             $imageDecoded = base64_decode($base64Image);
-            
             if ($imageDecoded !== false) {
                 $filename = 'home_' . time() . '_' . Str::random(5) . '.jpg';
                 Storage::disk('public')->put('inspections/' . $filename, $imageDecoded);
@@ -55,16 +59,12 @@ class InspectionController extends Controller
             }
         }
 
-        // 3. Proses Pelan Layout (Base64)
         if ($request->filled('cropped_layout')) {
             $base64Layout = $request->cropped_layout;
-            
             if (str_contains($base64Layout, 'data:image')) {
                 $base64Layout = substr($base64Layout, strpos($base64Layout, ',') + 1);
             }
-            
             $layoutDecoded = base64_decode($base64Layout);
-            
             if ($layoutDecoded !== false) {
                 $filename = 'layout_' . time() . '_' . Str::random(5) . '.jpg';
                 Storage::disk('public')->put('inspections/' . $filename, $layoutDecoded);
@@ -72,9 +72,9 @@ class InspectionController extends Controller
             }
         }
 
-        // 4. Simpan ke dalam pangkalan data
-        Inspection::create([
-            'user_id' => Auth::id(),
+        // Cipta inspection
+        $inspection = Inspection::create([
+            'user_id'    => Auth::id(),
             'title' => $request->title,
             'clientname' => $request->clientname,
             'address' => $request->address,
@@ -84,21 +84,26 @@ class InspectionController extends Controller
             'layout_img' => $layoutPath,
         ]);
 
+        // Simpan multiple staf ke pivot table
+        $inspection->staffs()->attach($request->user_id);
+
         return redirect()->route('inspection.index')->with('success', 'Projek pemeriksaan berjaya didaftarkan!');
     }
+
     // Paparkan butiran terperinci projek inspection
-     public function show(Inspection $inspection)
+    public function show(Inspection $inspection)
     {
         // Load defects dengan pagination (5 rekod setiap halaman)
         $defects = $inspection->defects()->paginate(5);
-        
+
         return view('inspections.show', compact('inspection', 'defects'));
     }
 
     // Paparkan borang edit projek
     public function edit(Inspection $inspection)
     {
-        return view('inspections.edit', compact('inspection'));
+        $staffs = User::all();
+        return view('inspections.edit', compact('inspection', 'staffs'));
     }
 
     // Simpan kemaskini data projek
@@ -107,6 +112,8 @@ class InspectionController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'clientname' => 'required|string|max:255',
+            'user_id' => 'required|array',
+            'user_id.*' => 'exists:users,id',
             'address' => 'required|string',
             'state' => 'required|string',
             'type' => 'required|string',
@@ -117,7 +124,6 @@ class InspectionController extends Controller
         $imgPath = $inspection->img;
         $layoutPath = $inspection->layout_img;
 
-        // Proses gambar rumah baharu jika ada dikemaskini melalui cropper
         if ($request->filled('cropped_image')) {
             $base64Image = $request->cropped_image;
             if (str_contains($base64Image, 'data:image')) {
@@ -125,7 +131,6 @@ class InspectionController extends Controller
             }
             $imageDecoded = base64_decode($base64Image);
             if ($imageDecoded !== false) {
-                // Padam gambar lama jika wujud
                 if ($inspection->img && Storage::disk('public')->exists($inspection->img)) {
                     Storage::disk('public')->delete($inspection->img);
                 }
@@ -135,7 +140,6 @@ class InspectionController extends Controller
             }
         }
 
-        // Proses pelan layout baharu jika ada dikemaskini
         if ($request->filled('cropped_layout')) {
             $base64Layout = $request->cropped_layout;
             if (str_contains($base64Layout, 'data:image')) {
@@ -152,7 +156,6 @@ class InspectionController extends Controller
             }
         }
 
-        // Kemaskini data ke pangkalan data
         $inspection->update([
             'title' => $request->title,
             'clientname' => $request->clientname,
@@ -163,10 +166,14 @@ class InspectionController extends Controller
             'layout_img' => $layoutPath,
         ]);
 
+        // Kemaskini senarai staf (sync menggantikan yang lama dengan pilihan baru)
+        $inspection->staffs()->sync($request->user_id);
+
         return redirect()->route('inspection.index')->with('success', 'Maklumat projek berjaya dikemaskini!');
     }
+
     // Fungsi untuk memuat turun PDF laporan
-     public function downloadPDF($id, $template_type)
+    public function downloadPDF($id, $template_type)
     {
         $inspection = Inspection::with('defects', 'user')->findOrFail($id);
         $settings = CompanySetting::first();
@@ -177,7 +184,7 @@ class InspectionController extends Controller
         if ($sourcePath && file_exists($sourcePath)) {
             $imgData = @file_get_contents($sourcePath);
             $img = @imagecreatefromstring($imgData);
-            
+
             if ($img) {
                 $width = imagesx($img);
                 $height = imagesy($img);
@@ -251,9 +258,9 @@ class InspectionController extends Controller
 
         return $response;
     }
-    
+
     // Paparkan senarai semua projek inspection
-   public function index(Request $request)
+    public function index(Request $request)
     {
         // 1. Mula bina query asas
         $query = Inspection::with('user')->latest();
@@ -261,10 +268,10 @@ class InspectionController extends Controller
         // 2. Logik Carian (Search bar) - Cari nama projek, klien, atau alamat
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('clientname', 'like', "%{$search}%")
-                  ->orWhere('address', 'like', "%{$search}%");
+                    ->orWhere('clientname', 'like', "%{$search}%")
+                    ->orWhere('address', 'like', "%{$search}%");
             });
         }
 

@@ -36,6 +36,24 @@
                     <input type="text" name="clientname" value="{{ old('clientname') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none" placeholder="Client's full name" required>
                 </div>
 
+                <!-- Assigned Staff (Multiple Selection) -->
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Assigned Staff In Charge (Select one or more)</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 border border-gray-300 rounded-lg bg-gray-50 max-h-48 overflow-y-auto">
+                            @foreach($staffs as $staff)
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" name="user_id[]" value="{{ $staff->id }}" 
+                                        {{ (is_array(old('user_id')) && in_array($staff->id, old('user_id'))) ? 'checked' : '' }}
+                                        class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <span class="text-sm text-gray-700 font-medium">{{ $staff->name }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('user_id')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                 <!-- Property Type -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
@@ -143,7 +161,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // --- DATA BINDING UNTUK STATE & CITY ---
         const malaysiaCities = {
             "Johor": ["Johor Bahru", "Tebrau", "Pasir Gudang", "Bukit Indah", "Skudai", "Batu Pahat", "Kluang", "Muar", "Kulai", "Segamat", "Pontian", "Kota Tinggi", "Mersing", "Tangkak", "Yong Peng", "Pekan Nanas", "Labis", "Simpang Renggam"],
             "Kedah": ["Alor Setar", "Sungai Petani", "Kulim", "Langkawi", "Baling", "Jitra", "Yan", "Sik", "Padang Terap", "Kuala Nerang", "Pokok Sena", "Pendang", "Gurun", "Bedong", "Kuala Ketil"],
@@ -166,7 +183,6 @@
         const stateSelect = document.getElementById('stateSelect');
         const citySelect = document.getElementById('citySelect');
         
-        // Function to populate cities based on state
         function populateCities(selectedState, selectedCity = null) {
             citySelect.innerHTML = '<option value="" disabled selected>Select city...</option>';
             
@@ -187,12 +203,10 @@
             }
         }
 
-        // On state change
         stateSelect.addEventListener('change', function() {
             populateCities(this.value);
         });
 
-        // Retain old values if validation fails
         const oldState = "{{ old('state') }}";
         const oldCity = "{{ old('city') }}";
         

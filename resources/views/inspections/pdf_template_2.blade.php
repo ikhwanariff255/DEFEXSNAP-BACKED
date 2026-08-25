@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <title>Inspection Report (Template 2) - {{ $inspection->title }}</title>
+    <title>Laporan Pemeriksaan (Template 2) - {{ $inspection->title }}</title>
 
     <style>
         @page {
@@ -22,7 +22,7 @@
         }
 
         /* =====================================================
-           COVER PAGE
+           MUKA DEPAN
         ===================================================== */
         .cover-container { text-align: center; padding-top: 50px; }
         .company-logo { max-width: 200px; max-height: 120px; margin-bottom: 30px; }
@@ -34,7 +34,7 @@
         .cover-info-table td.separator { width: 5%; text-align: center; font-weight: bold; }
 
         /* =====================================================
-           MAIN PLAN & INDICATION PLAN
+           PELAN UTAMA & INDICATION PLAN
         ===================================================== */
         .section-header { 
             background-color: #1a365d; 
@@ -49,7 +49,7 @@
         .plan-img { max-width: 100%; max-height: 520px; width: auto; height: auto; }
 
         /* =====================================================
-           LOCATION INTRO PAGE
+           HALAMAN KHAS LOKASI
         ===================================================== */
         .loc-intro-container { text-align: center; padding-top: 20px; }
         .loc-title { font-size: 16pt; font-weight: bold; text-transform: uppercase; color: #1a365d; margin-bottom: 5px; }
@@ -58,7 +58,7 @@
         .loc-plan-img { max-width: 100%; max-height: 480px; width: auto; height: auto; }
 
         /* =====================================================
-           INDIVIDUAL DEFECT TABLE BOX - FIXED VERSION
+           KOTAK JADUAL INDIVIDU DEFECT - FIXED VERSION
         ===================================================== */
         .defect-box {
             width: 100%;
@@ -130,7 +130,7 @@
         }
 
         /* =====================================================
-           IMAGE SECTION (BOTTOM) - PRESERVE ASPECT RATIO
+           BAHAGIAN GAMBAR (BAWAH) - PRESERVE ASPECT RATIO
         ===================================================== */
         .image-row td {
             padding: 4px 6px !important;
@@ -166,7 +166,7 @@
             object-fit: contain;
         }
 
-        /* Nested table to arrange images horizontally */
+        /* Nested table untuk susun gambar melintang */
         .inner-evidence-table {
             width: 100%;
             height: 100px;
@@ -223,7 +223,7 @@
 
 <body>
 
-    <!-- COVER PAGE -->
+    <!-- MUKA DEPAN -->
     <div class="cover-container">
         @if($settings && $settings->logo_path)
             <img src="{{ public_path('storage/' . $settings->logo_path) }}" class="company-logo">
@@ -231,16 +231,16 @@
             <h2 style="margin-bottom: 30px;">{{ $settings->company_name ?? 'BENAMORA SDN BHD' }}</h2>
         @endif
 
-        <div class="report-title">DEFECT INSPECTION REPORT</div>
+        <div class="report-title">LAPORAN PEMERIKSAAN KECACATAN</div>
 
         <table class="cover-info-table">
-            <tr><td class="label">PROJECT NAME</td><td class="separator">:</td><td><strong>{{ strtoupper($inspection->title) }}</strong></td></tr>
-            <tr><td class="label">CLIENT NAME</td><td class="separator">:</td><td>{{ strtoupper($inspection->clientname) }}</td></tr>
-            <tr><td class="label">ADDRESS</td><td class="separator">:</td><td>{{ strtoupper($inspection->address) }}, {{ $inspection->state }}</td></tr>
-            <tr><td class="label">PROPERTY TYPE</td><td class="separator">:</td><td>{{ strtoupper($inspection->type) }}</td></tr>
-            <tr><td class="label">INSPECTION OFFICER</td><td class="separator">:</td><td>{{ strtoupper($inspection->user->name ?? '-') }}</td></tr>
-            <tr><td class="label">REPORT DATE</td><td class="separator">:</td><td>{{ strtoupper(date('d F Y')) }}</td></tr>
-            <tr><td class="label">SSM / CIDB NO.</td><td class="separator">:</td><td>{{ $settings->ssm ?? '-' }} / {{ $settings->cidb ?? '-' }}</td></tr>
+            <tr><td class="label">NAMA PROJEK</td><td class="separator">:</td><td><strong>{{ strtoupper($inspection->title) }}</strong></td></tr>
+            <tr><td class="label">NAMA KLIEN</td><td class="separator">:</td><td>{{ strtoupper($inspection->clientname) }}</td></tr>
+            <tr><td class="label">ALAMAT</td><td class="separator">:</td><td>{{ strtoupper($inspection->address) }}, {{ $inspection->state }}</td></tr>
+            <tr><td class="label">JENIS HARTANAH</td><td class="separator">:</td><td>{{ strtoupper($inspection->type) }}</td></tr>
+            <tr><td class="label">PEGAWAI PEMERIKSA</td><td class="separator">:</td><td>{{ strtoupper($inspection->user->name ?? '-') }}</td></tr>
+            <tr><td class="label">TARIKH LAPORAN</td><td class="separator">:</td><td>{{ strtoupper(date('d F Y')) }}</td></tr>
+            <tr><td class="label">NO. SSM / CIDB</td><td class="separator">:</td><td>{{ $settings->ssm ?? '-' }} / {{ $settings->cidb ?? '-' }}</td></tr>
         </table>
     </div>
 
@@ -264,7 +264,7 @@
 
     <div class="page-break"></div>
 
-    <!-- LOCATION & INDIVIDUAL TABLE -->
+    <!-- LOKASI & JADUAL INDIVIDU -->
     @php
         $groupedDefects = $inspection->defects->groupBy(function($item) {
             return !empty($item->location) ? strtoupper(trim($item->location)) : 'UNSPECIFIED LOCATION';
@@ -273,7 +273,7 @@
 
     @forelse($groupedDefects as $location => $defects)
 
-        <!-- LOCATION INTRO PAGE -->
+        <!-- HALAMAN KHAS PENGENALAN LOKASI -->
         <div class="loc-intro-container">
             <div class="loc-title">LOCATION: {{ $location }}</div>
             <div class="loc-subtitle">DEFECT SPOTTED: {{ $defects->count() }} Defects spotted</div>
@@ -373,7 +373,7 @@
         @endforeach
 
     @empty
-        <p class="no-defects">No defect records have been entered yet.</p>
+        <p class="no-defects">Tiada sebarang rekod kecacatan dimasukkan.</p>
     @endforelse
 
 </body>
